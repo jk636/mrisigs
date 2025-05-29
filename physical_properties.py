@@ -3,7 +3,7 @@ import math # For math.floor
 
 # Data from Diffusion_Coeff_H20.m (diffusion coefficients in mm^2/s)
 # Index corresponds to temperature in Celsius.
-DIFFUSION_COEFF_H2O_DATA = {
+DIFFUSION_COEFF_H2O_MM2_PER_S = { # Renamed dictionary
     1: 1.1750e-3, 2: 1.2110e-3, 3: 1.2479e-3, 4: 1.2856e-3, 5: 1.3241e-3,
     6: 1.3635e-3, 7: 1.4038e-3, 8: 1.4450e-3, 9: 1.4870e-3, 10: 1.5300e-3,
     11: 1.5740e-3, 12: 1.6188e-3, 13: 1.6646e-3, 14: 1.7114e-3, 15: 1.7592e-3,
@@ -14,7 +14,7 @@ DIFFUSION_COEFF_H2O_DATA = {
     36: 3.0090e-3, 37: 3.0813e-3, 38: 3.1549e-3, 39: 3.2298e-3, 40: 3.3059e-3
 }
 
-def get_diffusion_coeff_h2o(temperature_celsius: int) -> float | None:
+def get_diffusion_coeff_h2o(temperature_celsius) -> float | None: # type hint for input relaxed to allow non-numbers for initial check
     """
     Returns the diffusion coefficient of water (in mm^2/s) at a given temperature.
 
@@ -47,11 +47,13 @@ def get_diffusion_coeff_h2o(temperature_celsius: int) -> float | None:
     
     # At this point, temperature_celsius should be an int, or the function returned None
 
-    if temperature_celsius in DIFFUSION_COEFF_H2O_DATA:
-        return DIFFUSION_COEFF_H2O_DATA[temperature_celsius]
+    if temperature_celsius in DIFFUSION_COEFF_H2O_MM2_PER_S: # Use renamed dictionary
+        return DIFFUSION_COEFF_H2O_MM2_PER_S[temperature_celsius] # Use renamed dictionary
     else:
         # Check if it was originally a valid number before potential flooring made it out of range
         # Or if it was an int from the start but out of range
+        # This check is implicitly handled because if it's not in the dict, it's either out of range 
+        # or was non-numeric and already returned None.
         print(f"Warning: Temperature {temperature_celsius}°C is outside the calibrated range [1, 40]. Returning None.")
         return None
 
