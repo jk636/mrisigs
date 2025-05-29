@@ -65,3 +65,18 @@ if __name__ == '__main__':
     print(f"D at '22': {get_diffusion_coeff_h2o('22')}") # Expected: Value for 22°C and warning
     print(f"D at 'invalid': {get_diffusion_coeff_h2o('invalid')}") # Expected: None and warning
     print(f"D at [20]: {get_diffusion_coeff_h2o([20])}") # Expected: None and warning
+
+# MRI System Configuration Parameters from Rad229_MRI_sys_config.m
+RAD229_MRI_SYSTEM_CONFIG = {
+    'B0': {'value': 3.0, 'units': 'T'},                     # Main (B0) field strength
+    'B1max': {'value': 25e-6, 'units': 'T'},                  # RF (B1) maximum field strength
+    'G_max': {'value': 10e-3, 'units': 'T/m'},                # Gradient maximum
+    'S_max': {'value': 100.0, 'units': 'T/m/s'},              # Slewrate maximum
+    'dt': {'value': 10e-6, 'units': 's'},                     # Waveform time steps (raster time)
+    # gamma_bar is defined globally below as GAMMA_PROTON_HZ_PER_T
+    # 'gamma_bar': {'value': 42.577478518e6, 'units': 'Hz/T'} 
+}
+
+# Gyromagnetic ratio for 1H (Protons)
+GAMMA_PROTON_HZ_PER_T = 42.577478518e6  # Hz/T
+GAMMA_PROTON_RAD_S_T = GAMMA_PROTON_HZ_PER_T * 2 * math.pi # rad s^-1 T^-1
