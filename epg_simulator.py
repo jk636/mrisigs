@@ -124,10 +124,50 @@ class EPGSimulator:
     def epg_mgrad(self, noadd=False):
         return self.epg_grad(noadd=noadd, positive_lobe=False)
 
-    def epg_grelax(self, T1, T2, T, kg=0, D=0, Gon=True, noadd=True):
-        self.epg_relax(T1, T2, T)
-        if Gon:
-            self.epg_grad(noadd=noadd, positive_lobe=True)
+    def epg_grelax(self, T1_ms, T2_ms, T_event_ms, kg=0.0, D=0.0, Gon=True, noadd=True):
+        # Relaxation
+        self.epg_relax(T1_ms, T2_ms, T_event_ms)
+
+        # Convert parameters to tensors
+        T_event_s = self._to_float_tensor(T_event_ms) / 1000.0 # Convert ms to s for diffusion calculation
+        kg_tensor = self._to_float_tensor(kg)
+        D_tensor = self._to_float_tensor(D)
+        Gon_float_tensor = self._to_float_tensor(1.0 if Gon else 0.0) # Convert boolean Gon to float tensor for calculations
+
+        # Diffusion
+        if D_tensor > 0:
+            if self.FZ.shape[1] > 0: # Ensure FZ is not empty
+                Findex = torch.arange(self.FZ.shape[1], device=self.device, dtype=torch.float32)
+
+                # b-value calculations (ensure results are complex for multiplication with FZ if needed, though exp is real)
+                # bvalZ = ((Findex) * kg_tensor)**2 * T_event_s # Z-states
+                # bvalp = (((Findex + 0.5 * Gon_float_tensor) * kg_tensor)**2 + Gon_float_tensor * kg_tensor**2 / 12.0) * T_event_s # F+ states
+                # bvalm = (((Findex - 0.5 * Gon_float_tensor) * kg_tensor)**2 + Gon_float_tensor * kg_tensor**2 / 12.0) * T_event_s # F- states
+                
+                # Using the direct expressions from MATLAB epg_grelax.m, adapting k (Findex) to be 0-indexed
+                # Original Matlab k is 1-indexed. Findex in Python is 0-indexed.
+                # Matlab: k = 1:N; bvalZ = ( (k-1).*kg ).^2 .*T;
+                # Python: Findex = 0:(N-1); bvalZ = (Findex * kg_tensor)**2 * T_event_s
+                bvalZ = (Findex * kg_tensor)**2 * T_event_s
+
+                # Matlab: k = 1:N; k = (k-1+0.5*Gon); bvalp = (k.*kg).^2+Gon*kg^2/12; bvalp = bvalp.*T;
+                # Python: Findex = 0:(N-1); k_eff_p = Findex + 0.5 * Gon_float_tensor; bvalp = (k_eff_p * kg_tensor)**2 + Gon_float_tensor * kg_tensor**2 / 12.0; bvalp = bvalp * T_event_s;
+                k_eff_p = Findex + 0.5 * Gon_float_tensor
+                bvalp = ( (k_eff_p * kg_tensor)**2 + Gon_float_tensor * (kg_tensor**2) / 12.0 ) * T_event_s
+                
+                # Matlab: k = 1:N; k = (-(k-1)+0.5*Gon); bvalm = (k.*kg).^2+Gon*kg^2/12; bvalm = bvalm.*T;
+                # Python: Findex = 0:(N-1); k_eff_m = -Findex + 0.5 * Gon_float_tensor; bvalm = (k_eff_m * kg_tensor)**2 + Gon_float_tensor * kg_tensor**2 / 12.0; bvalm = bvalm * T_event_s;
+                k_eff_m = -Findex + 0.5 * Gon_float_tensor
+                bvalm = ( (k_eff_m * kg_tensor)**2 + Gon_float_tensor * (kg_tensor**2) / 12.0 ) * T_event_s
+
+                self.FZ[0, :] *= torch.exp(-bvalp * D_tensor) # Attenuate F+ states
+                self.FZ[1, :] *= torch.exp(-bvalm * D_tensor) # Attenuate F- states
+                self.FZ[2, :] *= torch.exp(-bvalZ * D_tensor) # Attenuate Z states
+        
+        # Gradient
+        if Gon: # Check original boolean Gon
+            self.epg_grad(noadd=noadd, positive_lobe=(kg_tensor >= 0))
+            
         return self.FZ
 
     def epg_spinlocs(self, nspins=9):
@@ -285,6 +325,44 @@ class EPGSimulator:
             
         S = self.FZ[0, 0].clone() # F0 state is the signal
         return S, self.FZ.clone()
+
+    def epg_rfspoil_quadratic_phase(self, flip_angle_deg, initial_phase_increment_deg, num_pulses, T1_ms, T2_ms, TR_ms):
+        """
+        Simulates an RF-spoiled sequence with quadratic RF phase increment.
+        Based on Matlab's epg_rfspoil.m.
+        """
+        self.FZ = self.epg_m0()
+
+        # Convert phase increment to radians for internal calculations
+        initial_phase_increment_rad_tensor = torch.deg2rad(self._to_float_tensor(initial_phase_increment_deg))
+        
+        current_rf_phase_rad = self._to_float_tensor(0.0)
+        current_phase_step_rad = self._to_float_tensor(0.0) # This is 'phaseinc' in Matlab epg_rfspoil.m, which is accumulated
+
+        signals = torch.zeros(num_pulses, dtype=torch.complex64, device=self.device)
+
+        for n in range(num_pulses):
+            # Apply gradient and relaxation.
+            # Matlab epg_rfspoil.m calls epg_grelax(P,T1,T2,TR,1,0,1,1)
+            # kg=1 (used for diffusion, D=0 here) and gradient direction. kg=0 for positive_lobe=True is fine.
+            # Gon=1 (gradient is on)
+            # noadd=1 (noadd=True, important for RF spoiling state management)
+            self.epg_grelax(T1_ms, T2_ms, TR_ms, kg=0.0, D=0.0, Gon=True, noadd=True)
+
+            # Convert current RF phase to degrees for epg_rf
+            current_rf_phase_deg = torch.rad2deg(current_rf_phase_rad).item()
+            
+            # Apply RF pulse
+            self.epg_rf(flip_angle_deg, current_rf_phase_deg)
+
+            # Record signal (F0 state)
+            signals[n] = self.FZ[0, 0].clone()
+
+            # Update RF phase quadratically
+            current_rf_phase_rad = current_rf_phase_rad + current_phase_step_rad
+            current_phase_step_rad = current_phase_step_rad + initial_phase_increment_rad_tensor
+            
+        return signals
 
 
 if __name__ == '__main__':
