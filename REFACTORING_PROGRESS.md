@@ -68,13 +68,13 @@ This section covers miscellaneous Matlab files that are not part of the EPG grou
 
 | Matlab File                     | Status                                     | Notes                                                                 |
 |---------------------------------|--------------------------------------------|-----------------------------------------------------------------------|
-| `ft.m`                          | Utility function                           | Centered 2D FFT. Replaceable with `torch.fft.fftshift(torch.fft.fft2(torch.fft.fftshift(data)))`. Consider for deletion or inclusion in a Python util module if widely used. |
-| `ift.m`                         | Utility function                           | Centered 2D IFFT. Replaceable with `torch.fft.ifftshift(torch.fft.ifft2(torch.fft.ifftshift(data)))`. Consider for deletion or inclusion in a Python util module. |
-| `sinc.m`                        | Covered by PyTorch                         | Normalized sinc function. Use `torch.sinc()`. Mark for deletion.      |
-| `gaussian.m`                    | Utility function                           | Standard 1D Gaussian PDF. Can be custom Python function if needed.    |
+| `ft.m`                          | Deleted                                    | Centered 2D FFT. Replaceable with `torch.fft.fftshift(torch.fft.fft2(torch.fft.fftshift(data)))`. Consider for deletion or inclusion in a Python util module if widely used. File deleted. |
+| `ift.m`                         | Deleted                                    | Centered 2D IFFT. Replaceable with `torch.fft.ifftshift(torch.fft.ifft2(torch.fft.ifftshift(data)))`. Consider for deletion or inclusion in a Python util module. File deleted. |
+| `sinc.m`                        | Deleted                                    | Normalized sinc function. Use `torch.sinc()`. Mark for deletion. File deleted. |
+| `gaussian.m`                    | Deleted                                    | Standard 1D Gaussian PDF. Can be custom Python function if needed. File deleted. |
 | `Rad229_MRI_Phantom.m`          | Likely covered by Python/Rad229_MRI_Phantom.py | Matlab version seems incomplete. Python version likely supersedes it. Needs verification, then mark for deletion. |
-| `epgx/Test_SPGR.m`              | Pending Analysis                           | (Moved from EPGX section for clarity) Test script for SPGR with EPGX. Needs review for porting to a Python test for `EPGXSimulator`. |
-| `epgx/Test_fitting_MET.m`       | Pending Analysis                           | (Moved from EPGX section for clarity) MET fitting script. Assess if it's a test case for `EPGXSimulator` or an application example. |
+| `epgx/Test_SPGR.m`              | Deleted                                    | (Moved from EPGX section for clarity) Tests epg_X_rfspoil (MT-SPGR). Core simulation covered by EPGXSimulator.epgx_rfspoil. Comparison to external Malik et al. code and specific RF_phase_cycle helper (likely quadratic, covered by epg_rfspoil_quadratic_phase or can be generated) are test setup details. Python test can replicate forward sim. Consider for deletion. File deleted. |
+| `epgx/Test_fitting_MET.m`       | Deleted                                    | (Moved from EPGX section for clarity) Simulates MET data using epg_X_CMPG (covered by EPGXSimulator.epgx_cpmg) and then uses qMRLab for model fitting. Fitting part is external. Not for direct porting beyond data generation. Consider for deletion or as Python example for data generation. File deleted. |
 | `Diffusion_Coeff_H20.m`         | Data provider function                     | Returns hardcoded diffusion coefficients for H2O at various temperatures. Easy to port to a Python dictionary or data file if needed. |
 | `Rad229_Conventional_FlowComp.m`| Specialized gradient design function       | Designs flow-compensated gradient waveforms (Pelc et al.). Valuable to port to a Python gradient design module if functionality is desired. |
 | `Rad229_Conventional_FlowEncode.m`| Specialized gradient design function       | Designs flow-encoding gradient waveforms (Pelc et al.). Valuable to port to a Python gradient design module if functionality is desired. |
@@ -98,14 +98,14 @@ This section covers miscellaneous Matlab files that are not part of the EPG grou
 | `circ.m`                        | Utility function (2D circle generator)     | Creates a 2D circular mask. Easily done with NumPy. Low priority for direct porting. |
 | `conventional_flowcomp.m`       | Specialized gradient design function (flow comp) | Similar to `Rad229_Conventional_FlowComp.m`. Needs comparison to determine if redundant or unique. |
 | `conventional_flowencode.m`     | Specialized gradient design function (flow encode) | Similar to `Rad229_Conventional_FlowEncode.m`. Needs comparison to determine if redundant or unique. |
-| `corrnoise.m`                   | Utility function (correlated noise generator) | Generates correlated Gaussian noise. Covered by `numpy.random.multivariate_normal`. Consider for deletion. |
-| `cropim.m`                      | Utility function (image cropping)          | Crops image around center. Easily done with NumPy slicing. Low priority for direct porting. |
+| `corrnoise.m`                   | Deleted                                    | Generates correlated Gaussian noise. Covered by `numpy.random.multivariate_normal`. Consider for deletion. File deleted. |
+| `cropim.m`                      | Deleted                                    | Crops image around center. Easily done with NumPy slicing. Low priority for direct porting. File deleted. |
 | `csens2d.m`                     | MRI utility (coil sensitivity map estimation) | Estimates coil sensitivity maps from k-space calibration data. Important for SENSE. Check Python MRI libs or port. |
 | `demo.m`                        | Demonstration Script (`gropt` examples)    | Shows usage of `gropt`, `get_min_TE_diff`, `plot_waveform`. Convert to Python example/notebook if `gropt` is ported. |
 | `demo_moments.m`                | Demonstration Script (gradient moment design) | Shows gradient design with moment constraints, likely using `gropt`. Convert to Python example if relevant tools are ported. |
 | `demo_pns.m`                    | Demonstration Script (PNS constraints in gradient design) | Shows b-value optimization with PNS constraints. Convert to Python example if relevant tools are ported. |
 | `design_symmetric_gradients.m`  | Specialized gradient design function (DWI waveforms) | Designs monopolar, bipolar, modified bipolar DWI gradients. Includes `trapTransform` helper. Valuable to port if DWI sequence design is needed. |
-| `diamond.m`                     | Utility function (2D diamond shape generator) | Creates a 2D diamond mask. Easily done with NumPy. Low priority. |
+| `diamond.m`                     | Deleted                                    | Creates a 2D diamond mask. Easily done with NumPy. Low priority. File deleted. |
 | `dispangle.m`                   | Visualization utility (displays phase of complex data) | Wrapper for `dispim` to show phase. Python equivalent uses Matplotlib. |
 | `dispim.m`                      | Visualization utility (displays image magnitude) | Core image display. Python equivalent uses Matplotlib. |
 | `dispkspim.m`                   | Visualization utility (k-space and image display) | Displays k-space/image mag/phase in 2x2 subplot. Python equivalent uses Matplotlib & FFT functions. |
@@ -130,7 +130,7 @@ This section covers miscellaneous Matlab files that are not part of the EPG grou
 | `lfphase.m`                     | Utility function (low-frequency random phase generator) | Generates smooth random phase maps. Port to Python if needed for simulations. |
 | `lplot.m`                       | Plotting utility wrapper                   | Labels plot, sets grid, calls `setprops.m`. Python uses Matplotlib directly. |
 | `lsfatwater.m`                  | MRI utility (Least-Squares Fat-Water Separation - Dixon type) | Implements Dixon-like fat-water separation. Valuable algorithm to port to Python image processing module. |
-| `mag.m`                         | Utility function (vector/matrix magnitude) | Calculates L2 norm. Replaceable with `numpy.linalg.norm` or equivalent. |
+| `mag.m`                         | Deleted                                    | Calculates L2 norm. Replaceable with `numpy.linalg.norm` or equivalent. File deleted. |
 | `magphase.m`                    | Visualization utility (magnitude and phase plots) | Plots magnitude and phase of complex data. Python equivalent uses Matplotlib. |
 | `make.m`                        | Build script (for `gropt` MEX files)       | Compiles C source files for `gropt` into MEX. Not for direct porting. Informs `gropt.m` status. |
 | `makenoisykspace.m`             | Script (generates noisy k-space data)      | Creates phantom, adds noise in k-space. Python example/test script. |
@@ -138,8 +138,8 @@ This section covers miscellaneous Matlab files that are not part of the EPG grou
 | `mr2mc.m`                       | Utility function (Cartesian M to EPG state) | Converts [Mx; My; Mz] to [F+; F-; Z]. Could be EPG util in Python. |
 | `mingrad.m`                     | Gradient design utility (time-optimal gradient) | Calculates fastest gradient for a given area. Valuable to port to Python gradient utils. |
 | `msinc.m`                       | Utility function (windowed sinc)           | Generates a Hamming-windowed sinc function. Replaceable with SciPy components. |
-| `nft.m`                         | Utility function (Normalized centered 2D FFT) | Normalized version of `ft.m`. Replaceable with PyTorch FFT and manual normalization. |
-| `nift.m`                        | Utility function (Normalized centered 2D IFFT) | Normalized version of `ift.m`. Replaceable with PyTorch IFFT and manual normalization. (Filename in source `nft.m` but likely `nift.m`). |
+| `nft.m`                         | Deleted                                    | Normalized version of `ft.m`. Replaceable with PyTorch FFT and manual normalization. File deleted. |
+| `nift.m`                        | Deleted                                    | Normalized version of `ift.m`. Replaceable with PyTorch IFFT and manual normalization. (Filename in source `nft.m` but likely `nift.m`). File deleted. |
 | `nlegend.m`                     | Plotting utility wrapper (numerical legend) | Creates plot legend from numerical array. Minor helper, Matplotlib handles legends. |
 | `plot_waveform.m`               | Visualization script (gradient waveform analysis) | Plots gradient, moments, slew, PNS. Python equivalent uses Matplotlib and ported utils. |
 | `plotc.m`                       | Plotting utility (complex vector)          | Plots real, imag, mag of complex data. Python equivalent uses Matplotlib. |
@@ -147,10 +147,38 @@ This section covers miscellaneous Matlab files that are not part of the EPG grou
 | `plotm.m`                       | Visualization utility (3D magnetization vector display) | Shows 3D spin vectors in multiple views using `showspins`. Python equivalent uses Matplotlib 3D. |
 | `psf2d.m`                       | MRI utility (2D PSF calculation and display) | Calculates and plots 2D PSF from k-space. Port core logic; visualize with Matplotlib. |
 | `senseweights.m`                | MRI utility (SENSE weights, g-factor calculation) | Calculates SENSE parameters. Valuable. Check Python MRI libs or port. |
-| `setprops.m`                    | Obsolete/Non-functional script             | File content indicates it's not working and commented out. Mark for deletion. |
+| `setprops.m`                    | Deleted                                    | File content indicates it's not working and commented out. Mark for deletion. File deleted. |
 | `showspins.m`                   | Visualization utility (3D spin vector display) | Displays 3D spin vectors, with color options. Python equivalent uses Matplotlib 3D. |
 | `smart_subplot.m`               | Plotting utility (subplot layout enhancement) | Creates subplots with custom spacing. Matplotlib `GridSpec` or `subplots_adjust` offer this. |
 | `sweptfreqrf.m`                 | Demonstration Script (swept frequency RF pulse design & sim) | Designs and simulates a swept frequency RF pulse. Could be Python example. |
-| `time2freq.m`                   | Utility function (FFT frequency axis generation) | Converts time array to FFT frequency array. Covered by `numpy.fft.fftfreq` and `numpy.fft.fftshift`. |
+| `time2freq.m`                   | Deleted                                    | Converts time array to FFT frequency array. Covered by `numpy.fft.fftfreq` and `numpy.fft.fftshift`. File deleted. |
 | `vds.m`                         | Specialized k-space trajectory design (Variable Density Spiral) | Complex function to design VDS trajectories. Includes `findq2r2`, `qdf` helpers. Major porting effort if needed. |
 | `vecdcf.m`                      | MRI utility (Density Correction Factor calculation - vector method) | Calculates DCFs for non-Cartesian trajectories. Valuable. Port to Python if needed. |
+| `Rad229_Eddy_Currents_Demo.m`   | Educational script/demo (Eddy Currents, outdated) | Demonstrates eddy current effects and pre-emphasis. Marked as outdated. Low priority for porting. |
+| `Rad229_Fourier_Encoding_Demo.m`| Incomplete educational script/demo (Fourier Encoding) | Intended to demo Fourier encoding but marked as incomplete. |
+| `Rad229_Freq_Encode_Demo.m`     | Gradient design function (Frequency Encoding Demo) | Designs frequency encoding gradients. Could be part of a Python sequence building example/module. |
+| `Rad229_MRI_Resolution_Phantom.m`| Phantom generator (resolution phantom)     | Creates a bar pattern phantom with T2-star values. Port to Python if this phantom is needed. |
+| `Rad229_MRI_sys_config.m`       | Configuration data (MRI system parameters) | Defines default MRI system parameters (Gmax, Smax, etc.). Replicate as Python dict or in `physical_properties.py`. |
+| `Rad229_Motion_Artifacts_Demo.m`| Educational script/demo (Motion Artifacts) | Demonstrates bulk and pulsatile motion artifacts using a phantom. Could be Python example/notebook. |
+| `Rad229_PSD_fig.m`              | Visualization utility (Pulse Sequence Diagram plotting) | Generates PSD plots. Python equivalent uses Matplotlib. (Function name `PAM_PSD_fig` in file). |
+| `Rad229_Phase_Encode_Demo.m`    | Educational script/demo (Phase Encode Gradient Design) | Designs and demonstrates phase encoding gradients. |
+| `Rad229_RandomWalk_Diffusion.m` | Educational script/demo (Random Walk Diffusion Simulation) | Simulates and visualizes random walk diffusion with gradients. Includes local helper functions. |
+| `Rad229_Random_Walk.m`          | Educational script/demo (Basic Random Walk) | Simulates 1D and 3D random walks. |
+| `Rad229_Slice_Select_Demo.m`    | Educational script/demo (Slice Select Design) | Designs RF and gradients for slice selection. |
+| `Rad229_Structure_Definitions.m`| Documentation (Structure Definitions)      | Describes Matlab struct conventions for MRI parameters. Informs Python data structures. |
+| `Rad229_fig_style.m`            | Plotting utility (Figure styling)          | Applies custom styles to Matlab figures. Python uses Matplotlib styling. |
+| `Rad229_plot_style.m`           | Plotting utility (Plot color and line styling) | Defines and applies custom plot colors/styles. Python uses Matplotlib styling. |
+| `whirl.m`                       | Specialized k-space trajectory design (WHIRL) | Designs WHIRL k-space trajectories (J. Pipe). Major porting effort if needed. |
+| `zpadcrop.m`                    | Utility function (Image zero-padding/cropping) | Zero-pads or crops an image, centered. Replaceable with NumPy/SciPy. |
+| `Lecture_05A_Nonlinear_Gradients.mlx` | Educational MLX (Matlab Live Script)   | Interactive lecture/demo. Consider for manual conversion to Jupyter Notebook if content is desired in Python format. |
+| `Lecture_05B_Eddy_Currents.mlx`       | Educational MLX (Matlab Live Script)   | Interactive lecture/demo. Consider for manual conversion to Jupyter Notebook. |
+| `Lecture_05C_Concomitant_Fields.mlx`  | Educational MLX (Matlab Live Script)   | Interactive lecture/demo. Consider for manual conversion to Jupyter Notebook. |
+| `Rad229_CODE.mlx`                     | Educational MLX (Matlab Live Script)   | Appears to be a collection of code for Rad229 course. Assess content for useful examples; consider conversion to Jupyter Notebooks. |
+| `Rad229_EPI_Chemical_Shift_Demo.mlx`  | Educational MLX (Matlab Live Script)   | EPI demo. Consider for manual conversion to Jupyter Notebook. |
+| `Rad229_EPI_Ghosting_Demo.mlx`        | Educational MLX (Matlab Live Script)   | EPI demo. Consider for manual conversion to Jupyter Notebook. |
+| `Rad229_EPI_OffRes_Dist_Demo.mlx`     | Educational MLX (Matlab Live Script)   | EPI demo. Consider for manual conversion to Jupyter Notebook. |
+| `Rad229_EPI_T2star_Blurring_Demo.mlx` | Educational MLX (Matlab Live Script)   | EPI demo. Consider for manual conversion to Jupyter Notebook. |
+| `Rad229_Eddy_Currents_Demo.mlx`     | Educational MLX (Matlab Live Script)   | Eddy currents demo (MLX version). Consider for manual conversion to Jupyter Notebook. |
+| `Rad229_Flow_Encoding_Gradients.mlx`| Educational MLX (Matlab Live Script)   | Flow encoding demo. Consider for manual conversion to Jupyter Notebook. |
+| `Rad229_Motion_Artifacts_Demo.mlx`  | Educational MLX (Matlab Live Script)   | Motion artifacts demo (MLX version). Consider for manual conversion to Jupyter Notebook. |
+| `Rad229_Nonlinear_Gradients.mlx`    | Educational MLX (Matlab Live Script)   | Nonlinear gradients demo (MLX version, see also Lecture_05A). Consider for manual conversion to Jupyter Notebook. |
