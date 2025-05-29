@@ -32,6 +32,41 @@ The general approach is to replace MATLAB script functionalities with Python fun
 | `cropim.m`              | `image_manipulation.py::ImageManipulation.cropim()`                  | Ported. `.m` file ready for removal.                                           |
 | `zpadcrop.m`            | `image_manipulation.py::ImageManipulation.zpadcrop()`                | Ported. `.m` file ready for removal.                                           |
 | `dispim.m`              | `image_manipulation.py::ImageManipulation.dispim()`                  | Ported. `.m` file ready for removal.                                           |
+| `epg_spins2FZ.m`        | `epg_simulator.py::EPGSimulator.epg_spins2FZ()`                      | Ported. `.m` file ready for removal.                                           |
+| `epg_FZ2spins.m`        | `epg_simulator.py::EPGSimulator.epg_FZ2spins()`                      | Ported. `.m` file ready for removal.                                           |
+| `epg_zrot.m`            | `epg_simulator.py::EPGSimulator.epg_zrot()`                          | Ported. `.m` file ready for removal.                                           |
+| `epg_m0.m`              | `epg_simulator.py::EPGSimulator.epg_m0()`                            | Ported. `.m` file ready for removal.                                           |
+| `epg_mgrad.m`           | `epg_simulator.py::EPGSimulator.epg_mgrad()`                         | Ported. `.m` file ready for removal.                                           |
+| `epg_cpmg.m`            | `epg_simulator.py::EPGSimulator.epg_cpmg()`                          | Ported. `.m` file ready for removal.                                           |
+| `epg_gradecho.m`        | `epg_simulator.py::EPGSimulator.epg_gradecho()`                      | Ported. `.m` file ready for removal.                                           |
+| `epg_stim.m`            | `epg_simulator.py::EPGSimulator.epg_stim_calc()`                     | Ported (as `epg_stim_calc`). `.m` file ready for removal.                      |
+| `epg_show.m`            | `epg_simulator.py::EPGSimulator.show_matrix()`                       | Core data display ported. `.m` file ready for removal.                         |
+| `epg_showstate.m`       | `epg_simulator.py::EPGSimulator.show_matrix()`                       | Core data display ported. `.m` file ready for removal.                         |
+| `bvalue.m`              | `gradient_kspace_tools.py::GradientKSpaceTools.bvalue()`             | Ported. `.m` file ready for removal.                                           |
+| `calcgradinfo.m`        | `gradient_kspace_tools.py::GradientKSpaceTools.calcgradinfo()`       | Ported. `.m` file ready for removal.                                           |
+| `mingrad.m`             | `gradient_kspace_tools.py::GradientKSpaceTools.mingrad()`            | Ported. `.m` file ready for removal.                                           |
+| `ksquare.m`             | `gradient_kspace_tools.py::GradientKSpaceTools.ksquare()`            | Ported. `.m` file ready for removal.                                           |
+| `time2freq.m`           | `gradient_kspace_tools.py::GradientKSpaceTools.time2freq()`          | Ported. `.m` file ready for removal.                                           |
+| `gridmat.m`             | `gradient_kspace_tools.py::GradientKSpaceTools.gridmat()`            | Ported. `.m` file ready for removal.                                           |
+| `vecdcf.m`              | `gradient_kspace_tools.py::GradientKSpaceTools.vecdcf()`             | Ported. `.m` file ready for removal.                                           |
+| `vds.m`                 | `gradient_kspace_tools.py` (components available)                    | Components for VDS available. Direct script not ported. `.m` file ready for removal. |
+| `kb.m`                  | `gradient_kspace_tools.py::GradientKSpaceTools._kb()`                | Ported (as helper). `.m` file ready for removal.                               |
+| `cumint.m`              | `gradient_kspace_tools.py::GradientKSpaceTools._cumint()`            | Ported (as helper). `.m` file ready for removal.                               |
+| `findq2r2.m`            | N/A                                                                  | Not directly ported; functionality may be internal or superseded. Ok to remove. |
+| `qdf.m`                 | N/A                                                                  | Not directly ported; functionality may be internal or superseded. Ok to remove. |
+| `corrnoise.m`           | `noise_simulator.py::NoiseSimulator.corrnoise()`                     | Ported. `.m` file ready for removal.                                           |
+| `circ.m`                | User-generated with PyTorch / `mri_signal_processor`                 | Basic shape, easily replicable. `.m` file ready for removal.                   |
+| `diamond.m`             | User-generated with PyTorch                                          | Basic shape, easily replicable. `.m` file ready for removal.                   |
+| `sq.m`                  | User-generated with PyTorch                                          | Basic shape, easily replicable. `.m` file ready for removal.                   |
+| `angleim.m`             | `image_manipulation.py::ImageManipulation.dispangle()`               | Ported (display part). Generation via `torch.atan2`. `.m` file ready for removal.|
+| `csens2d.m`             | `mri_reconstructor.py::MRIReconstructor.csens2d()`                   | Ported. `.m` file ready for removal.                                           |
+| `senseweights.m`        | `mri_reconstructor.py::MRIReconstructor.senseweights()`              | Ported. `.m` file ready for removal.                                           |
+| `senserecon.m`          | `mri_reconstructor.py::MRIReconstructor.senserecon()`                | Ported. `.m` file ready for removal.                                           |
+| `rmscombine.m`          | `mri_reconstructor.py::MRIReconstructor.rmscombine()`                | Ported. `.m` file ready for removal.                                           |
+| `dispkspim.m`           | `image_manipulation.py::ImageManipulation.dispkspim()`               | Ported. `.m` file ready for removal.                                           |
+| `dispangle.m`           | `image_manipulation.py::ImageManipulation.dispangle()`               | Ported. `.m` file ready for removal.                                           |
+| `displogim.m`           | `image_manipulation.py::ImageManipulation.displogim()`               | Ported. `.m` file ready for removal.                                           |
+| `abprop.m`              | `Python/examples.py::exampleB1_15` (logic ported)                    | Logic ported to example. `.m` file ready for removal.                        |
 |                         |                                                                      |                                                                                |
 
 **Further files will be added to this list as they are processed.**
